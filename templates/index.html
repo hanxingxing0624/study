@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Learning Notes{% endblock %}
+{% block content %}
+<h2>Dashboard</h2>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;">
+    <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;font-weight:700;color:var(--primary);">{{ stats.total }}</div>
+        <div class="meta">Total Notes</div>
+    </div>
+    <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;font-weight:700;color:#e67e22;">{{ stats.in_progress }}</div>
+        <div class="meta">In Progress</div>
+    </div>
+    <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;font-weight:700;color:var(--accent);">{{ stats.due_reviews }}</div>
+        <div class="meta">Due for Review</div>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+    <div>
+        <h3>Recent Notes</h3>
+        {% if recent_notes %}
+        {% for note in recent_notes %}
+        <div class="card">
+            <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
+            <div class="meta">
+                <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+                {% if note.folder %}📁 {{ note.folder.name }}{% endif %}
+                {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="meta">No notes yet. <a href="/notes/new">Create your first note</a>.</p>
+        {% endif %}
+    </div>
+    <div>
+        <h3>Due for Review</h3>
+        {% if due_reviews %}
+        {% for review in due_reviews %}
+        <div class="card">
+            <h3><a href="/notes/{{ review.note.id }}">{{ review.note.title }}</a></h3>
+            <div class="meta">
+                Next review: {{ review.next_review_at.strftime('%Y-%m-%d') }}
+                · Interval: {{ review.interval }}d
+                · Ease: {{ "%.1f" % review.ease_factor }}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="meta">No reviews due. <a href="/review">Go to review panel</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

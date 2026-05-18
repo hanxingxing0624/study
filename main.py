@@ -48,6 +48,40 @@ def get_db(request: Request):
     return request.state.db
 
 
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    from datetime import datetime, timezone
+    from models import Note, Review
+    db = request.state.db
+
+    total = db.query(Note).count()
+    in_progress = db.query(Note).filter(Note.status == "in_progress").count()
+
+    now = datetime.now(timezone.utc)
+    due_reviews = (
+        db.query(Review)
+        .filter(Review.next_review_at <= now)
+        .order_by(Review.next_review_at.asc())
+        .limit(5)
+        .all()
+    )
+
+    recent_notes = (
+        db.query(Note)
+        .order_by(Note.updated_at.desc())
+        .limit(10)
+        .all()
+    )
+
+    stats = {
+        "total": total,
+        "in_progress": in_progress,
+        "due_reviews": len(due_reviews),
+    }
+
+    return render_template("index.html", stats=stats, recent_notes=recent_notes, due_reviews=due_reviews)
+
+
 from routes import folders, notes
 app.include_router(folders.router)
 app.include_router(notes.router)
