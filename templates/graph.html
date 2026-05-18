@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Knowledge Graph - Learning Notes{% endblock %}
+{% block content %}
+<h2>Knowledge Graph</h2>
+<div id="graph" class="graph-container"></div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/graph/data")
+        .then(r => r.json())
+        .then(data => {
+            const width = document.getElementById("graph").clientWidth;
+            const height = document.getElementById("graph").clientHeight || 500;
+
+            const svg = d3.select("#graph")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            const g = svg.append("g");
+
+            const zoom = d3.zoom()
+                .scaleExtent([0.3, 3])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                });
+            svg.call(zoom);
+
+            const color = d3.scaleOrdinal()
+                .domain(["planning", "in_progress", "completed"])
+                .range(["#f59e0b", "#3b82f6", "#10b981"]);
+
+            const simulation = d3.forceSimulation(data.nodes)
+                .force("link", d3.forceLink(data.edges).id(d => d.id).distance(120))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            const link = g.append("g")
+                .selectAll("line")
+                .data(data.edges)
+                .join("line")
+                .attr("stroke", "#ccc")
+                .attr("stroke-width", 1.5);
+
+            const node = g.append("g")
+                .selectAll("g")
+                .data(data.nodes)
+                .join("g")
+                .call(d3.drag()
+                    .on("start", (event, d) => {
+                        if (!event.active) simulation.alphaTarget(0.3).restart();
+                        d.fx = d.x; d.fy = d.y;
+                    })
+                    .on("drag", (event, d) => {
+                        d.fx = event.x; d.fy = event.y;
+                    })
+                    .on("end", (event, d) => {
+                        if (!event.active) simulation.alphaTarget(0);
+                        d.fx = null; d.fy = null;
+                    })
+                );
+
+            node.append("circle")
+                .attr("r", 8)
+                .attr("fill", d => color(d.status));
+
+            node.append("text")
+                .text(d => d.title)
+                .attr("x", 12)
+                .attr("y", 4)
+                .attr("font-size", "11px")
+                .attr("fill", "var(--text)");
+
+            node.append("title").text(d => d.title);
+
+            node.on("click", (event, d) => {
+                window.location.href = `/notes/${d.id}`;
+            });
+
+            simulation.on("tick", () => {
+                link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                node.attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        });
+});
+</script>
+{% endblock %}
