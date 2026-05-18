@@ -53,3 +53,5 @@ app.include_router(folders.router)
 app.include_router(notes.router)
 from routes import tags
 app.include_router(tags.router)
+from routes import search
+app.include_router(search.router)

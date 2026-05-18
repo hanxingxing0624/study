@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Search - Learning Notes{% endblock %}
+{% block content %}
+<h2>Search</h2>
+<form action="/search" method="get" style="margin-bottom:1.5rem;">
+    <div style="display:flex;gap:0.5rem;">
+        <input type="search" name="q" value="{{ query }}" placeholder="Search notes..."
+            style="flex:1;padding:0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.95rem;">
+        <button type="submit" class="btn">Search</button>
+    </div>
+</form>
+
+{% if query %}
+<p class="meta">{{ results|length }} result(s) for "{{ query }}"</p>
+{% if results %}
+{% for note in results %}
+<div class="card">
+    <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
+    <div class="meta">
+        <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+        {% if note.folder %}&#x1f4c1; {{ note.folder.name }}{% endif %}
+        Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+    </div>
+    <p style="margin-top:0.25rem;font-size:0.85rem;color:var(--text-muted);">
+        {{ note.content[:200] }}{% if note.content|length > 200 %}...{% endif %}
+    </p>
+</div>
+{% endfor %}
+{% else %}
+<p>No notes found.</p>
+{% endif %}
+{% endif %}
+{% endblock %}
