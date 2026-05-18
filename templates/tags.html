@@ -29,19 +29,51 @@
 <div class="page-header">
     <h2>Tags</h2>
 </div>
+
+<div class="card mb-3">
+    <form method="post" action="/tags" style="display:flex;gap:0.5rem;align-items:flex-end;">
+        <div style="flex:1;">
+            <label for="new-tag-name" style="font-size:0.78rem;font-weight:550;color:var(--text-secondary);">New Tag</label>
+            <input type="text" id="new-tag-name" name="name" required placeholder="Tag name"
+                style="padding:0.4rem 0.6rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.85rem;width:100%;margin-top:0.2rem;">
+        </div>
+        <button type="submit" class="btn btn-sm">Create</button>
+    </form>
+</div>
+
 {% if tag_counts %}
 <div class="tag-cloud">
 {% for tag, count in tag_counts %}
-<a href="/tags/{{ tag.id }}" class="tag-cloud-item">
-    #{{ tag.name }}
-    <span class="tag-count">{{ count }}</span>
-</a>
+<div class="tag-cloud-item" x-data="{ editing: false, name: '{{ tag.name }}' }">
+    <template x-if="!editing">
+        <a href="/tags/{{ tag.id }}" style="display:flex;align-items:center;gap:0.35rem;text-decoration:none;color:inherit;" @dblclick.prevent="editing = true">
+            #<span x-text="name"></span>
+            <span class="tag-count">{{ count }}</span>
+        </a>
+    </template>
+    <template x-if="editing">
+        <form method="post" action="/tags/{{ tag.id }}/rename" style="display:flex;gap:0.25rem;align-items:center;"
+            @submit="editing = false" @click.outside="editing = false">
+            <input type="text" name="name" x-model="name" @keydown.escape="editing = false"
+                style="padding:0.15rem 0.35rem;border:1px solid var(--primary);border-radius:4px;font-size:0.8rem;width:100px;"
+                x-ref="input" x-init="$nextTick(() => $refs.input.focus())">
+            <button type="submit" style="background:none;border:none;cursor:pointer;font-size:0.75rem;padding:0;">&#x2714;</button>
+            <button type="button" @click="editing = false" style="background:none;border:none;cursor:pointer;font-size:0.75rem;padding:0;">&#x2715;</button>
+        </form>
+    </template>
+    <button class="btn btn-ghost"
+        hx-delete="/tags/{{ tag.id }}"
+        hx-confirm="Delete tag #{{ tag.name }}? This removes it from all notes."
+        hx-target="body"
+        style="font-size:0.65rem;padding:0.1rem 0.3rem;margin-left:0.25rem;color:var(--text-muted);"
+        title="Delete tag">&#x2715;</button>
+</div>
 {% endfor %}
 </div>
 {% else %}
 <div class="empty-state">
     <div class="empty-icon">&#x1f3f7;</div>
-    <p>No tags yet. Add tags when creating notes.</p>
+    <p>No tags yet. Add tags when creating notes or create one above.</p>
 </div>
 {% endif %}
 {% endif %}
