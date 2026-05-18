@@ -1,51 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Folders - Learning Notes{% endblock %}
+{% block title %}Folders{% endblock %}
 {% block content %}
-<h2>Folders</h2>
+<div class="page-header">
+    <h2>Folders</h2>
+</div>
 
 {% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
 
-<form method="post" action="/folders" style="margin-bottom:1.5rem;">
-    <div class="form-row" style="align-items:end;">
-        <div class="form-group">
-            <label for="name">New Folder Name</label>
-            <input type="text" id="name" name="name" required placeholder="Folder name">
+<div class="card mb-3">
+    <form method="post" action="/folders">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">New Folder</label>
+                <input type="text" id="name" name="name" required placeholder="Folder name">
+            </div>
+            <div class="form-group">
+                <label for="parent_id">Parent</label>
+                <select id="parent_id" name="parent_id">
+                    <option value="">Root</option>
+                    {% for f in all_folders %}
+                    <option value="{{ f.id }}">{{ f.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group flex-none">
+                <button class="btn">Create</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="parent_id">Parent Folder</label>
-            <select id="parent_id" name="parent_id">
-                <option value="">— Root —</option>
-                {% for f in all_folders %}
-                <option value="{{ f.id }}">{{ f.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group" style="flex:0;">
-            <button class="btn">Create</button>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 
 {% if current_folder %}
-<h3 style="margin-bottom:1rem;">
-    {% if current_folder.parent_id and all_folders %}
+<div class="page-header">
+    <h3>
+        {% if current_folder.parent_id %}
         {% for f in all_folders %}{% if f.id == current_folder.parent_id %}
-            <a href="/folders/{{ f.id }}">{{ f.name }}</a> /
+        <a href="/folders/{{ f.id }}">{{ f.name }}</a> /
         {% endif %}{% endfor %}
-    {% endif %}
-    {{ current_folder.name }}
+        {% endif %}
+        {{ current_folder.name }}
+    </h3>
     <button class="btn btn-danger btn-sm"
         hx-delete="/folders/{{ current_folder.id }}"
         hx-confirm="Delete '{{ current_folder.name }}' and all its contents?"
-        hx-target="body">Delete</button>
-</h3>
+        hx-target="body">Delete Folder</button>
+</div>
 
 {% if subfolders %}
-<h4>Subfolders</h4>
-<div class="tree">
+<h4 style="margin-top:1rem;">Subfolders</h4>
+<div class="folder-tree">
     {% for sf in subfolders %}
-    <div class="tree-item">
-        📁 <a href="/folders/{{ sf.id }}">{{ sf.name }}</a>
+    <div class="folder-tree-item">
+        <span class="folder-icon">&#x1f4c1;</span>
+        <a href="/folders/{{ sf.id }}">{{ sf.name }}</a>
     </div>
     {% endfor %}
 </div>
@@ -55,10 +62,12 @@
 <h4 style="margin-top:1rem;">Notes</h4>
 {% for note in notes %}
 <div class="card">
-    <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
-    <div class="meta">
+    <div class="card-title">
+        <a href="/notes/{{ note.id }}">{{ note.title }}</a>
+    </div>
+    <div class="card-meta">
         <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
-        Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+        <span>Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
     </div>
 </div>
 {% endfor %}
@@ -66,16 +75,17 @@
 
 {% else %}
 {% if tree %}
-<h3>Folder Structure</h3>
-<div class="tree">
+<h4>All Folders</h4>
+<div class="folder-tree mt-2">
 {% macro render_tree(nodes, depth=0) %}
 {% for node in nodes %}
-<div class="tree-item" style="padding-left:{{ depth * 1.5 }}rem;">
-    📁 <a href="/folders/{{ node.folder.id }}">{{ node.folder.name }}</a>
-    <button class="btn btn-danger btn-sm"
+<div class="folder-tree-item" style="padding-left:{{ depth * 1.2 }}rem;">
+    <span class="folder-icon">&#x1f4c1;</span>
+    <a href="/folders/{{ node.folder.id }}">{{ node.folder.name }}</a>
+    <button class="btn btn-ghost btn-sm"
         hx-delete="/folders/{{ node.folder.id }}"
-        hx-confirm="Delete '{{ node.folder.name }}' and all its contents?"
-        hx-target="body">x</button>
+        hx-confirm="Delete '{{ node.folder.name }}'?"
+        hx-target="body" style="font-size:0.7rem;">&#x2715;</button>
 </div>
 {{ render_tree(node.children, depth + 1) }}
 {% endfor %}
@@ -83,7 +93,10 @@
 {{ render_tree(tree) }}
 </div>
 {% else %}
-<p class="meta">No folders yet. Create one above.</p>
+<div class="empty-state">
+    <div class="empty-icon">&#x1f4c1;</div>
+    <p>No folders yet</p>
+</div>
 {% endif %}
 {% endif %}
 {% endblock %}

@@ -11,63 +11,55 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --surface: #ffffff;
-            --border: #dee2e6;
-            --text: #212529;
-            --text-muted: #6c757d;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --accent: #10b981;
-            --radius: 8px;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg); color: var(--text); line-height: 1.6;
-            display: flex; min-height: 100vh;
-        }
-        nav.sidebar {
-            width: 240px; background: var(--surface); border-right: 1px solid var(--border);
-            padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;
-            position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto;
-        }
-        nav.sidebar h1 { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
-        nav.sidebar a {
-            display: block; padding: 0.4rem 0.6rem; border-radius: 6px;
-            text-decoration: none; color: var(--text); font-size: 0.9rem;
-        }
-        nav.sidebar a:hover, nav.sidebar a.active { background: #e8f0fe; color: var(--primary); }
-        nav.sidebar .nav-section { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-top: 0.5rem; padding: 0 0.6rem; letter-spacing: 0.05em; }
-        main.content { margin-left: 240px; flex: 1; padding: 2rem; max-width: 960px; }
-    </style>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="/static/js/app.js" defer></script>
 </head>
 <body>
     <nav class="sidebar">
-        <h1><a href="/" style="text-decoration:none;color:inherit;">Learning Notes</a></h1>
-        <div>
-            <div class="nav-section">Content</div>
-            <a href="/">Dashboard</a>
-            <a href="/notes/new">+ New Note</a>
-            <a href="/folders">Folders</a>
-            <a href="/tags">Tags</a>
-            <a href="/review">Review</a>
-            <a href="/graph">Knowledge Graph</a>
+        <div class="sidebar-header">
+            <h1>
+                <a href="/">
+                    <span class="logo-icon">&#x1f4d6;</span>
+                    Learning Notes
+                </a>
+            </h1>
         </div>
-        <div>
-            <div class="nav-section">Search</div>
-            <form action="/search" method="get" style="margin-top:0.25rem;">
-                <input type="search" name="q" placeholder="Search notes..."
-                    style="width:100%;padding:0.35rem 0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;">
+        <div class="sidebar-search">
+            <form action="/search" method="get">
+                <input type="search" name="q" placeholder="Search notes...">
             </form>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-group">
+                <div class="nav-label">Workspace</div>
+                <a href="/" class="nav-item">
+                    <span class="nav-icon">&#x1f4ca;</span> Dashboard
+                </a>
+                <a href="/notes/new" class="nav-item">
+                    <span class="nav-icon">&#x2795;</span> New Note
+                </a>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">Browse</div>
+                <a href="/folders" class="nav-item">
+                    <span class="nav-icon">&#x1f4c1;</span> Folders
+                </a>
+                <a href="/tags" class="nav-item">
+                    <span class="nav-icon">&#x1f3f7;</span> Tags
+                </a>
+                <a href="/review" class="nav-item">
+                    <span class="nav-icon">&#x1f504;</span> Review
+                </a>
+                <a href="/graph" class="nav-item">
+                    <span class="nav-icon">&#x1f578;</span> Knowledge Graph
+                </a>
+            </div>
         </div>
     </nav>
     <main class="content">
         {% block content %}{% endblock %}
     </main>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

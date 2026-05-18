@@ -1,56 +1,80 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - Learning Notes{% endblock %}
+{% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2>Dashboard</h2>
+<div class="page-header">
+    <h2>Dashboard</h2>
+</div>
 
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;">
-    <div class="card" style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:var(--primary);">{{ stats.total }}</div>
-        <div class="meta">Total Notes</div>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background:var(--primary-light);color:var(--primary);">&#x1f4c4;</div>
+        <div>
+            <div class="stat-value">{{ stats.total }}</div>
+            <div class="stat-label">Total Notes</div>
+        </div>
     </div>
-    <div class="card" style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:#e67e22;">{{ stats.in_progress }}</div>
-        <div class="meta">In Progress</div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:var(--warning-light);color:var(--warning);">&#x1f4dd;</div>
+        <div>
+            <div class="stat-value">{{ stats.in_progress }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
     </div>
-    <div class="card" style="text-align:center;">
-        <div style="font-size:2rem;font-weight:700;color:var(--accent);">{{ stats.due_reviews }}</div>
-        <div class="meta">Due for Review</div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:var(--accent-light);color:var(--accent);">&#x1f504;</div>
+        <div>
+            <div class="stat-value">{{ stats.due_reviews }}</div>
+            <div class="stat-label">Due for Review</div>
+        </div>
     </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+<div class="split-grid">
     <div>
-        <h3>Recent Notes</h3>
+        <h4>Recent Notes</h4>
         {% if recent_notes %}
         {% for note in recent_notes %}
         <div class="card">
-            <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
-            <div class="meta">
+            <div class="card-title">
+                <a href="/notes/{{ note.id }}">{{ note.title }}</a>
+            </div>
+            <div class="card-meta">
                 <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
-                {% if note.folder %}📁 {{ note.folder.name }}{% endif %}
-                {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+                {% if note.folder %}<span>&#x1f4c1; {{ note.folder.name }}</span>{% endif %}
+                <span>{{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
             </div>
         </div>
         {% endfor %}
         {% else %}
-        <p class="meta">No notes yet. <a href="/notes/new">Create your first note</a>.</p>
+        <div class="empty-state">
+            <div class="empty-icon">&#x1f4dd;</div>
+            <p>No notes yet</p>
+            <a href="/notes/new" class="btn">Create Your First Note</a>
+        </div>
         {% endif %}
     </div>
     <div>
-        <h3>Due for Review</h3>
+        <h4>Due for Review</h4>
         {% if due_reviews %}
         {% for review in due_reviews %}
         <div class="card">
-            <h3><a href="/notes/{{ review.note.id }}">{{ review.note.title }}</a></h3>
-            <div class="meta">
-                Next review: {{ review.next_review_at.strftime('%Y-%m-%d') }}
-                · Interval: {{ review.interval }}d
-                · Ease: {{ "%.1f" % review.ease_factor }}
+            <div class="card-title">
+                <a href="/notes/{{ review.note.id }}">{{ review.note.title }}</a>
             </div>
+            <div class="card-meta">
+                <span>Next: {{ review.next_review_at.strftime('%Y-%m-%d') }}</span>
+                <span>Interval: {{ review.interval }}d</span>
+                <span>Ease: {{ "%.1f" % review.ease_factor }}</span>
+            </div>
+            <a href="/review/{{ review.note.id }}" class="btn btn-sm mt-1">Review</a>
         </div>
         {% endfor %}
         {% else %}
-        <p class="meta">No reviews due. <a href="/review">Go to review panel</a>.</p>
+        <div class="empty-state">
+            <div class="empty-icon">&#x2705;</div>
+            <p>All caught up</p>
+            <a href="/review" class="btn btn-secondary btn-sm">Review Panel</a>
+        </div>
         {% endif %}
     </div>
 </div>

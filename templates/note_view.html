@@ -1,57 +1,68 @@
 {% extends "base.html" %}
-{% block title %}{{ note.title }} - Learning Notes{% endblock %}
+{% block title %}{{ note.title }}{% endblock %}
 {% block content %}
-<div style="display:flex;gap:1rem;">
-    <article style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
-            <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
-            {% if note.folder %}
-            <span class="meta">📁 <a href="/folders/{{ note.folder.id }}">{{ note.folder.name }}</a></span>
-            {% endif %}
-            <span class="meta" style="margin-left:auto;">Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
-        </div>
-        <h2>{{ note.title }}</h2>
-        {% if note.tags %}
-        <div style="margin:0.5rem 0;">
-            {% for nt in note.tags %}
-            <a href="/tags/{{ nt.tag.id }}" class="badge" style="background:#e8f0fe;color:var(--primary);margin-right:0.25rem;">#{{ nt.tag.name }}</a>
-            {% endfor %}
-        </div>
-        {% endif %}
-        <div class="markdown-body" style="margin-top:1.5rem;">
+<div class="page-header">
+    <h2>{{ note.title }}</h2>
+    <div style="display:flex;gap:0.5rem;">
+        <a href="/notes/{{ note.id }}/edit" class="btn btn-sm">Edit</a>
+        <button class="btn btn-danger btn-sm"
+            hx-delete="/notes/{{ note.id }}"
+            hx-confirm="Delete this note?"
+            hx-target="body">Delete</button>
+    </div>
+</div>
+
+<div class="card-meta mb-2">
+    <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+    {% if note.folder %}
+    <span>&#x1f4c1; <a href="/folders/{{ note.folder.id }}">{{ note.folder.name }}</a></span>
+    {% endif %}
+    <span>Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+</div>
+
+{% if note.tags %}
+<div class="mb-3">
+    {% for nt in note.tags %}
+    <a href="/tags/{{ nt.tag.id }}" class="badge-tag">#{{ nt.tag.name }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="note-layout">
+    <div class="note-main">
+        <div class="markdown-body">
             {{ html_content|safe }}
         </div>
-        <div style="margin-top:2rem;display:flex;gap:0.5rem;">
-            <a href="/notes/{{ note.id }}/edit" class="btn">Edit</a>
-            <button class="btn btn-secondary"
-                hx-delete="/notes/{{ note.id }}"
-                hx-confirm="Delete this note?"
-                hx-target="body">Delete</button>
-        </div>
-    </article>
-    <aside style="width:220px;flex-shrink:0;">
+    </div>
+    <aside class="note-sidebar">
         {% if note.outgoing_links %}
-        <div class="card"><h4>Links to</h4>
-            <ul style="list-style:none;padding:0;">
+        <div class="mb-2">
+            <h4>Links To</h4>
+            <ul class="link-list">
             {% for link in note.outgoing_links %}
-                <li style="padding:0.15rem 0;">→ <a href="/notes/{{ link.target.id }}">{{ link.target.title }}</a></li>
+                <li>&#x1f517; <a href="/notes/{{ link.target.id }}">{{ link.target.title }}</a></li>
             {% endfor %}
             </ul>
         </div>
         {% endif %}
         {% if note.incoming_links %}
-        <div class="card"><h4>Linked from</h4>
-            <ul style="list-style:none;padding:0;">
+        <div class="mb-2">
+            <h4>Linked From</h4>
+            <ul class="link-list">
             {% for link in note.incoming_links %}
-                <li style="padding:0.15rem 0;">← <a href="/notes/{{ link.source.id }}">{{ link.source.title }}</a></li>
+                <li>&#x2190; <a href="/notes/{{ link.source.id }}">{{ link.source.title }}</a></li>
             {% endfor %}
             </ul>
         </div>
         {% endif %}
         {% if note.review_record %}
-        <div class="card"><h4>Review</h4>
-            <p class="meta">Next: {{ note.review_record.next_review_at.strftime('%Y-%m-%d') }}</p>
-            <p class="meta">Interval: {{ note.review_record.interval }} day(s)</p>
+        <div class="card">
+            <h4>Review Info</h4>
+            <div class="card-meta" style="flex-direction:column;align-items:flex-start;gap:0.2rem;">
+                <span>Next: {{ note.review_record.next_review_at.strftime('%Y-%m-%d') }}</span>
+                <span>Interval: {{ note.review_record.interval }} day(s)</span>
+                <span>Ease: {{ "%.1f" % note.review_record.ease_factor }}</span>
+            </div>
         </div>
         {% endif %}
     </aside>

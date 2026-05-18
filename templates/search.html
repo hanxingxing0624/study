@@ -1,33 +1,42 @@
 {% extends "base.html" %}
-{% block title %}Search - Learning Notes{% endblock %}
+{% block title %}Search{% endblock %}
 {% block content %}
-<h2>Search</h2>
-<form action="/search" method="get" style="margin-bottom:1.5rem;">
+<div class="page-header">
+    <h2>Search</h2>
+</div>
+
+<form action="/search" method="get" class="mb-3">
     <div style="display:flex;gap:0.5rem;">
         <input type="search" name="q" value="{{ query }}" placeholder="Search notes..."
-            style="flex:1;padding:0.5rem;border:1px solid var(--border);border-radius:6px;font-size:0.95rem;">
+            style="flex:1;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;outline:none;transition:border-color 0.15s,box-shadow 0.15s;"
+            onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 2px rgba(26,115,232,0.15)'"
+            onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
         <button type="submit" class="btn">Search</button>
     </div>
 </form>
 
 {% if query %}
-<p class="meta">{{ results|length }} result(s) for "{{ query }}"</p>
+<p class="muted mb-2">{{ results|length }} result(s) for "{{ query }}"</p>
 {% if results %}
 {% for note in results %}
 <div class="card">
-    <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
-    <div class="meta">
-        <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
-        {% if note.folder %}&#x1f4c1; {{ note.folder.name }}{% endif %}
-        Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+    <div class="card-title">
+        <a href="/notes/{{ note.id }}">{{ note.title }}</a>
     </div>
-    <p style="margin-top:0.25rem;font-size:0.85rem;color:var(--text-muted);">
+    <div class="card-meta">
+        <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+        {% if note.folder %}<span>&#x1f4c1; {{ note.folder.name }}</span>{% endif %}
+        <span>{{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+    </div>
+    <p style="margin-top:0.35rem;font-size:0.84rem;color:var(--text-secondary);line-height:1.5;">
         {{ note.content[:200] }}{% if note.content|length > 200 %}...{% endif %}
     </p>
 </div>
 {% endfor %}
 {% else %}
-<p>No notes found.</p>
+<div class="empty-state">
+    <p>No notes found matching "{{ query }}".</p>
+</div>
 {% endif %}
 {% endif %}
 {% endblock %}
