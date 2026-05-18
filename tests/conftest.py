@@ -19,12 +19,12 @@ def db_session():
 
 @pytest.fixture
 def client(db_session):
-    from main import app
+    from main import app, get_db
 
     def override_get_db():
         yield db_session
 
-    app.dependency_overrides["get_db"] = override_get_db
+    app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()

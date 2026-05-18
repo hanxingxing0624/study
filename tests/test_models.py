@@ -92,3 +92,20 @@ def test_review_record(db_session):
     db_session.commit()
     assert review.note == note
     assert note.review_record.ease_factor == 2.5
+
+
+def test_delete_note_cascades(db_session):
+    note = Note(title="Test", content="test")
+    tag = Tag(name="python")
+    db_session.add_all([note, tag])
+    db_session.flush()
+    nt = NoteTag(note_id=note.id, tag_id=tag.id)
+    link = NoteLink(source_id=note.id, target_id=note.id)
+    review = Review(note_id=note.id, next_review_at=datetime(2026, 5, 19))
+    db_session.add_all([nt, link, review])
+    db_session.commit()
+    db_session.delete(note)
+    db_session.commit()
+    assert db_session.query(NoteTag).count() == 0
+    assert db_session.query(NoteLink).count() == 0
+    assert db_session.query(Review).count() == 0

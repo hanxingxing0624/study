@@ -25,3 +25,7 @@ os.makedirs(os.path.join(BASE_DIR, "static", "css"), exist_ok=True)
 os.makedirs(os.path.join(BASE_DIR, "static", "js"), exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+
+def get_db(request):
+    return request.state.db

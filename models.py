@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import (
     Column, Integer, String, Text, DateTime, Float, ForeignKey, create_engine,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship, sessionmaker, declarative_base
 
@@ -15,7 +16,8 @@ class Folder(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     parent_id = Column(Integer, ForeignKey("folders.id"), nullable=True)
-    parent = relationship("Folder", remote_side=[id], backref="children")
+    parent = relationship("Folder", remote_side=[id], back_populates="children")
+    children = relationship("Folder", back_populates="parent", cascade="all, delete-orphan")
     notes = relationship("Note", back_populates="folder", cascade="all, delete-orphan")
 
 
@@ -56,6 +58,7 @@ class Tag(Base):
 
 class NoteTag(Base):
     __tablename__ = "note_tags"
+    __table_args__ = (UniqueConstraint("note_id", "tag_id"),)
     id = Column(Integer, primary_key=True, autoincrement=True)
     note_id = Column(Integer, ForeignKey("notes.id"), nullable=False)
     tag_id = Column(Integer, ForeignKey("tags.id"), nullable=False)
