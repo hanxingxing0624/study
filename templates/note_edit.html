@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{% if note %}Edit{% else %}New{% endif %} Note - Learning Notes{% endblock %}
+{% block content %}
+<h2>{% if note %}Edit{% else %}New{% endif %} Note</h2>
+
+{% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
+
+<form method="post"
+    action="{% if note %}/notes/{{ note.id }}/edit{% else %}/notes/new{% endif %}">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required
+            value="{{ note.title if note else '' }}" placeholder="Note title">
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="folder_id">Folder</label>
+            <select id="folder_id" name="folder_id">
+                <option value="">— None —</option>
+                {% for f in folders %}
+                <option value="{{ f.id }}"
+                    {% if note and note.folder_id == f.id %}selected{% endif %}>
+                    {{ f.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="planning" {% if note and note.status=='planning' %}selected{% endif %}>Planning</option>
+                <option value="in_progress" {% if note and note.status=='in_progress' %}selected{% endif %}>In Progress</option>
+                <option value="completed" {% if note and note.status=='completed' %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="tags">Tags (comma separated)</label>
+        <input type="text" id="tags" name="tags"
+            value="{% if note %}{% for nt in note.tags %}{{ nt.tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}"
+            placeholder="python, algorithms, beginner">
+    </div>
+
+    <div class="edit-container">
+        <div class="edit-pane">
+            <label style="font-weight:600;margin-bottom:0.25rem;">Markdown</label>
+            <textarea name="content" id="content"
+                placeholder="Write your Markdown here...">{{ note.content if note else '' }}</textarea>
+        </div>
+        <div class="preview-pane" id="preview">
+            <p class="meta">Preview is shown after saving.</p>
+        </div>
+    </div>
+
+    <div style="margin-top:1rem;display:flex;gap:0.5rem;">
+        <button type="submit" class="btn">Save</button>
+        <a href="{% if note %}/notes/{{ note.id }}{% else %}/{% endif %}" class="btn btn-secondary">Cancel</a>
+        {% if note %}
+        <button class="btn btn-danger"
+            hx-delete="/notes/{{ note.id }}"
+            hx-confirm="Delete this note?"
+            hx-target="body">Delete</button>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}

@@ -48,5 +48,6 @@ def get_db(request: Request):
     return request.state.db
 
 
-from routes import folders
+from routes import folders, notes
 app.include_router(folders.router)
+app.include_router(notes.router)
