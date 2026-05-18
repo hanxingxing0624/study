@@ -55,7 +55,7 @@
         <form method="post" action="/tags/{{ tag.id }}/rename" style="display:flex;gap:0.25rem;align-items:center;"
             @submit="editing = false" @click.outside="editing = false">
             <input type="text" name="name" x-model="name" @keydown.escape="editing = false"
-                style="padding:0.15rem 0.35rem;border:1px solid var(--primary);border-radius:4px;font-size:0.8rem;width:100px;"
+                style="padding:0.15rem 0.35rem;border:1px solid var(--accent);border-radius:4px;font-size:0.8rem;width:100px;"
                 x-ref="input" x-init="$nextTick(() => $refs.input.focus())">
             <button type="submit" style="background:none;border:none;cursor:pointer;font-size:0.75rem;padding:0;">&#x2714;</button>
             <button type="button" @click="editing = false" style="background:none;border:none;cursor:pointer;font-size:0.75rem;padding:0;">&#x2715;</button>
