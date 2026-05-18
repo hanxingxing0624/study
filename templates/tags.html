@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{% if tag %}#{{ tag.name }}{% else %}Tags{% endif %} - Learning Notes{% endblock %}
+{% block content %}
+{% if tag %}
+<h2>#{{ tag.name }}</h2>
+<p class="meta">{{ notes|length }} note(s)</p>
+{% if notes %}
+{% for note in notes %}
+<div class="card">
+    <h3><a href="/notes/{{ note.id }}">{{ note.title }}</a></h3>
+    <div class="meta">
+        <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+        Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p class="meta">No notes with this tag.</p>
+{% endif %}
+<a href="/tags" class="btn btn-secondary" style="margin-top:1rem;">← All Tags</a>
+
+{% else %}
+<h2>Tags</h2>
+{% if tag_counts %}
+<div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;">
+{% for tag, count in tag_counts %}
+<a href="/tags/{{ tag.id }}" class="card" style="text-decoration:none;padding:0.5rem 1rem;display:inline-flex;align-items:center;gap:0.5rem;">
+    <span style="font-size:1.1rem;font-weight:600;">#{{ tag.name }}</span>
+    <span class="meta">({{ count }})</span>
+</a>
+{% endfor %}
+</div>
+{% else %}
+<p class="meta">No tags yet. Add tags when creating notes.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

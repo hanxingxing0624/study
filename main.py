@@ -51,3 +51,5 @@ def get_db(request: Request):
 from routes import folders, notes
 app.include_router(folders.router)
 app.include_router(notes.router)
+from routes import tags
+app.include_router(tags.router)
