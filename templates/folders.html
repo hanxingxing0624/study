@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Folders{% endblock %}
+{% block title %}文件夹{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Folders</h2>
+    <h2>文件夹</h2>
 </div>
 
 {% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
@@ -11,20 +11,20 @@
     <form method="post" action="/folders">
         <div class="form-row">
             <div class="form-group">
-                <label for="name">New Folder</label>
-                <input type="text" id="name" name="name" required placeholder="Folder name">
+                <label for="name">新建文件夹</label>
+                <input type="text" id="name" name="name" required placeholder="文件夹名称">
             </div>
             <div class="form-group">
-                <label for="parent_id">Parent</label>
+                <label for="parent_id">上级文件夹</label>
                 <select id="parent_id" name="parent_id">
-                    <option value="">Root</option>
+                    <option value="">根目录</option>
                     {% for f in all_folders %}
                     <option value="{{ f.id }}">{{ f.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form-group flex-none">
-                <button class="btn">Create</button>
+                <button class="btn">创建</button>
             </div>
         </div>
     </form>
@@ -42,12 +42,12 @@
     </h3>
     <button class="btn btn-danger btn-sm"
         hx-delete="/folders/{{ current_folder.id }}"
-        hx-confirm="Delete '{{ current_folder.name }}' and all its contents?"
-        hx-target="body">Delete Folder</button>
+        hx-confirm="确定删除 '{{ current_folder.name }}' 及其所有内容？"
+        hx-target="body">删除文件夹</button>
 </div>
 
 {% if subfolders %}
-<h4 style="margin-top:1rem;">Subfolders</h4>
+<h4 style="margin-top:1rem;">子文件夹</h4>
 <div class="folder-tree">
     {% for sf in subfolders %}
     <div class="folder-tree-item">
@@ -59,7 +59,7 @@
 {% endif %}
 
 {% if notes %}
-<h4 style="margin-top:1rem;">Notes</h4>
+<h4 style="margin-top:1rem;">笔记</h4>
 {% for note in notes %}
 <div class="card">
     <div class="card-title">
@@ -67,7 +67,7 @@
     </div>
     <div class="card-meta">
         <span class="badge">{{ note.status }}</span>
-        <span>Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        <span>更新于 {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
     </div>
 </div>
 {% endfor %}
@@ -75,7 +75,7 @@
 
 {% else %}
 {% if tree %}
-<h4>All Folders</h4>
+<h4>全部文件夹</h4>
 <div class="folder-tree mt-2">
 {% macro render_tree(nodes, depth=0) %}
 {% for node in nodes %}
@@ -84,7 +84,7 @@
     <a href="/folders/{{ node.folder.id }}">{{ node.folder.name }}</a>
     <button class="btn btn-ghost btn-sm"
         hx-delete="/folders/{{ node.folder.id }}"
-        hx-confirm="Delete '{{ node.folder.name }}'?"
+        hx-confirm="确定删除 '{{ node.folder.name }}'？"
         hx-target="body" style="font-size:0.7rem;">&#x2715;</button>
 </div>
 {{ render_tree(node.children, depth + 1) }}
@@ -95,7 +95,7 @@
 {% else %}
 <div class="empty-state">
     <div class="empty-icon">&#x1f4c1;</div>
-    <p>No folders yet</p>
+    <p>暂无文件夹</p>
 </div>
 {% endif %}
 {% endif %}

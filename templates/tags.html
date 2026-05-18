@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}{% if tag %}#{{ tag.name }}{% else %}Tags{% endif %}{% endblock %}
+{% block title %}{% if tag %}#{{ tag.name }}{% else %}标签{% endif %}{% endblock %}
 {% block content %}
 {% if tag %}
 <div class="page-header">
     <h2>#{{ tag.name }}</h2>
-    <a href="/tags" class="btn btn-secondary btn-sm">All Tags</a>
+    <a href="/tags" class="btn btn-secondary btn-sm">全部标签</a>
 </div>
-<p class="muted mb-2">{{ notes|length }} note(s)</p>
+<p class="muted mb-2">{{ notes|length }} 篇笔记</p>
 {% if notes %}
 {% for note in notes %}
 <div class="card">
@@ -15,29 +15,29 @@
     </div>
     <div class="card-meta">
         <span class="badge">{{ note.status }}</span>
-        <span>Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        <span>更新于 {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
     </div>
 </div>
 {% endfor %}
 {% else %}
 <div class="empty-state">
-    <p class="muted">No notes with this tag.</p>
+    <p class="muted">此标签下暂无笔记。</p>
 </div>
 {% endif %}
 
 {% else %}
 <div class="page-header">
-    <h2>Tags</h2>
+    <h2>标签</h2>
 </div>
 
 <div class="card mb-3">
     <form method="post" action="/tags" style="display:flex;gap:0.5rem;align-items:flex-end;">
         <div style="flex:1;">
-            <label for="new-tag-name" style="font-size:0.78rem;font-weight:550;color:var(--text-secondary);">New Tag</label>
-            <input type="text" id="new-tag-name" name="name" required placeholder="Tag name"
+            <label for="new-tag-name" style="font-size:0.78rem;font-weight:550;color:var(--text-secondary);">新建标签</label>
+            <input type="text" id="new-tag-name" name="name" required placeholder="标签名称"
                 style="padding:0.4rem 0.6rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.85rem;width:100%;margin-top:0.2rem;">
         </div>
-        <button type="submit" class="btn btn-sm">Create</button>
+        <button type="submit" class="btn btn-sm">创建</button>
     </form>
 </div>
 
@@ -63,7 +63,7 @@
     </template>
     <button class="btn btn-ghost"
         hx-delete="/tags/{{ tag.id }}"
-        hx-confirm="Delete tag #{{ tag.name }}? This removes it from all notes."
+        hx-confirm="确定删除标签 #{{ tag.name }}？将从所有笔记中移除此标签。"
         hx-target="body"
         style="font-size:0.65rem;padding:0.1rem 0.3rem;margin-left:0.25rem;color:var(--text-muted);"
         title="Delete tag">&#x2715;</button>
@@ -73,7 +73,7 @@
 {% else %}
 <div class="empty-state">
     <div class="empty-icon">&#x1f3f7;</div>
-    <p>No tags yet. Add tags when creating notes or create one above.</p>
+    <p>暂无标签。创建笔记时添加标签，或在此新建。</p>
 </div>
 {% endif %}
 {% endif %}

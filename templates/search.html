@@ -1,22 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Search{% endblock %}
+{% block title %}搜索{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Search</h2>
+    <h2>搜索</h2>
 </div>
 
 <form action="/search" method="get" class="mb-3">
     <div style="display:flex;gap:0.5rem;">
-        <input type="search" name="q" value="{{ query }}" placeholder="Search notes..."
+        <input type="search" name="q" value="{{ query }}" placeholder="搜索笔记..."
             style="flex:1;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;outline:none;transition:border-color 0.15s,box-shadow 0.15s;"
             onfocus="this.style.borderColor='#2563eb';this.style.boxShadow='0 0 0 2px rgba(37,99,235,0.08)'"
             onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
-        <button type="submit" class="btn">Search</button>
+        <button type="submit" class="btn">搜索</button>
     </div>
 </form>
 
 {% if query %}
-<p class="muted mb-2">{{ results|length }} result(s) for "{{ query }}"</p>
+<p class="muted mb-2">{{ results|length }} 条结果，关键词 "{{ query }}"</p>
 {% if results %}
 {% for note in results %}
 <div class="card">
@@ -35,7 +35,7 @@
 {% endfor %}
 {% else %}
 <div class="empty-state">
-    <p>No notes found matching "{{ query }}".</p>
+    <p>未找到匹配 "{{ query }}" 的笔记。</p>
 </div>
 {% endif %}
 {% endif %}

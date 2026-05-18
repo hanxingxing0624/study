@@ -23,7 +23,7 @@ async def create_note(request: Request):
     form = await request.form()
     title = form.get("title", "").strip()
     content = form.get("content", "")
-    status = form.get("status", "planning")
+    status = form.get("status", "计划中")
     folder_id = form.get("folder_id") or None
     if folder_id:
         try:
@@ -34,7 +34,7 @@ async def create_note(request: Request):
 
     if not title:
         folders = db.query(Folder).order_by(Folder.name).all()
-        return render_template("note_edit.html", note=None, folders=folders, error="Title is required")
+        return render_template("note_edit.html", note=None, folders=folders, error="标题不能为空")
 
     note = Note(title=title, content=content, status=status, folder_id=folder_id)
     db.add(note)
@@ -82,11 +82,11 @@ async def update_note(note_id: int, request: Request):
     title = form.get("title", "").strip()
     if not title:
         folders = db.query(Folder).order_by(Folder.name).all()
-        return render_template("note_edit.html", note=note, folders=folders, error="Title is required")
+        return render_template("note_edit.html", note=note, folders=folders, error="标题不能为空")
 
     note.title = title
     note.content = form.get("content", "")
-    note.status = form.get("status", "planning")
+    note.status = form.get("status", "计划中")
     folder_id = form.get("folder_id") or None
     note.folder_id = int(folder_id) if folder_id else None
 

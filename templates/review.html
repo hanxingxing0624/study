@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Review{% endblock %}
+{% block title %}复习{% endblock %}
 {% block content %}
-<h2>Spaced Repetition Review</h2>
+<h2>间隔复习</h2>
 
 {% if reviewing_note %}
-<a href="/review" class="btn btn-secondary btn-sm mb-2">Back to List</a>
+<a href="/review" class="btn btn-secondary btn-sm mb-2">返回列表</a>
 
 <div class="card mb-3">
     <h3 style="margin-bottom:0.75rem;">{{ reviewing_note.title }}</h3>
@@ -12,13 +12,13 @@
         {{ reviewing_note.content }}
     </div>
     <div style="margin-top:1.25rem;">
-        <p class="muted">How well did you recall this?</p>
+        <p class="muted">你记住了多少内容？</p>
         <form method="post" action="/review/{{ reviewing_note.id }}" class="review-buttons">
-            <button name="quality" value="0" class="review-btn review-btn-0">0<br>Forgot</button>
-            <button name="quality" value="2" class="review-btn review-btn-2">2<br>Hard</button>
-            <button name="quality" value="3" class="review-btn review-btn-3">3<br>OK</button>
-            <button name="quality" value="4" class="review-btn review-btn-4">4<br>Good</button>
-            <button name="quality" value="5" class="review-btn review-btn-5">5<br>Easy</button>
+            <button name="quality" value="0" class="review-btn review-btn-0">0<br>忘了</button>
+            <button name="quality" value="2" class="review-btn review-btn-2">2<br>困难</button>
+            <button name="quality" value="3" class="review-btn review-btn-3">3<br>一般</button>
+            <button name="quality" value="4" class="review-btn review-btn-4">4<br>良好</button>
+            <button name="quality" value="5" class="review-btn review-btn-5">5<br>简单</button>
         </form>
     </div>
 </div>
@@ -26,7 +26,7 @@
 {% else %}
 <div class="split-grid">
     <div>
-        <h4>Due for Review ({{ due|length }})</h4>
+        <h4>待复习 ({{ due|length }})</h4>
         {% if due %}
         {% for review in due %}
         <div class="card">
@@ -36,22 +36,22 @@
                 </div>
             </div>
             <div class="card-meta">
-                <span>Due: {{ review.next_review_at.strftime('%Y-%m-%d %H:%M') }}</span>
-                <span>Interval: {{ review.interval }}d</span>
-                <span>Ease: {{ "%.1f" % review.ease_factor }}</span>
+                <span>到期: {{ review.next_review_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                <span>间隔: {{ review.interval }}天</span>
+                <span>轻松度: {{ "%.1f" % review.ease_factor }}</span>
             </div>
-            <a href="/review/{{ review.note.id }}" class="btn btn-sm mt-1">Review Now</a>
+            <a href="/review/{{ review.note.id }}" class="btn btn-sm mt-1">开始复习</a>
         </div>
         {% endfor %}
         {% else %}
         <div class="empty-state">
             <div class="empty-icon">&#x2705;</div>
-            <p>All caught up!</p>
+            <p>全部完成！</p>
         </div>
         {% endif %}
     </div>
     <div>
-        <h4>Needs Initial Review</h4>
+        <h4>待初次复习</h4>
         {% if unreviewed %}
         {% for note in unreviewed %}
         <div class="card">
@@ -61,23 +61,23 @@
             <div class="card-meta">
                 <span>{{ note.updated_at.strftime('%Y-%m-%d') }}</span>
             </div>
-            <a href="/review/{{ note.id }}" class="btn btn-sm mt-1">Start Review</a>
+            <a href="/review/{{ note.id }}" class="btn btn-sm mt-1">开始复习</a>
         </div>
         {% endfor %}
         {% else %}
-        <p class="muted">No notes awaiting initial review.</p>
+        <p class="muted">没有需要初次复习的笔记。</p>
         {% endif %}
 
         {% if upcoming %}
-        <h4 style="margin-top:1.5rem;">Upcoming</h4>
+        <h4 style="margin-top:1.5rem;">即将到来</h4>
         {% for review in upcoming %}
         <div class="card">
             <div class="card-title">
                 <a href="/notes/{{ review.note.id }}">{{ review.note.title }}</a>
             </div>
             <div class="card-meta">
-                <span>Next: {{ review.next_review_at.strftime('%Y-%m-%d') }}</span>
-                <span>{{ review.interval }}d</span>
+                <span>下次: {{ review.next_review_at.strftime('%Y-%m-%d') }}</span>
+                <span>{{ review.interval }}天</span>
             </div>
         </div>
         {% endfor %}

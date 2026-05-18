@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}仪表盘{% endblock %}
 {% block content %}
 <div class="page-header">
     <div>
-        <h2 style="margin-bottom:0.15rem;">Good morning</h2>
-        <p class="muted" style="margin-bottom:0;">{{ stats.due_reviews }} item(s) due for review</p>
+        <h2 style="margin-bottom:0.15rem;">早上好</h2>
+        <p class="muted" style="margin-bottom:0;">{{ stats.due_reviews }} 条待复习</p>
     </div>
-    <a href="/notes/new" class="btn">New Note</a>
+    <a href="/notes/new" class="btn">新建笔记</a>
 </div>
 
 <div class="stats-grid">
@@ -14,28 +14,28 @@
         <div class="stat-icon">&#x1f4c4;</div>
         <div>
             <div class="stat-value">{{ stats.total }}</div>
-            <div class="stat-label">Total Notes</div>
+            <div class="stat-label">笔记总数</div>
         </div>
     </div>
     <div class="stat-card featured">
         <div class="stat-icon">&#x1f4dd;</div>
         <div>
             <div class="stat-value">{{ stats.in_progress }}</div>
-            <div class="stat-label">In Progress</div>
+            <div class="stat-label">进行中</div>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon">&#x1f504;</div>
         <div>
             <div class="stat-value">{{ stats.due_reviews }}</div>
-            <div class="stat-label">Due for Review</div>
+            <div class="stat-label">待复习</div>
         </div>
     </div>
 </div>
 
 <div class="split-grid">
     <div>
-        <h4>Recent Notes</h4>
+        <h4>最近笔记</h4>
         {% if recent_notes %}
         {% for note in recent_notes %}
         <div class="card">
@@ -52,13 +52,13 @@
         {% else %}
         <div class="empty-state">
             <div class="empty-icon">&#x1f4dd;</div>
-            <p>No notes yet</p>
-            <a href="/notes/new" class="btn">Create Your First Note</a>
+            <p>暂无笔记</p>
+            <a href="/notes/new" class="btn">创建第一篇笔记</a>
         </div>
         {% endif %}
     </div>
     <div>
-        <h4>Due for Review</h4>
+        <h4>待复习</h4>
         {% if due_reviews %}
         {% for review in due_reviews %}
         <div class="card">
@@ -66,16 +66,16 @@
                 <a href="/notes/{{ review.note.id }}">{{ review.note.title }}</a>
             </div>
             <div class="card-meta">
-                <span>Next: {{ review.next_review_at.strftime('%Y-%m-%d') }}</span>
-                <span>{{ review.interval }}d interval</span>
+                <span>下次: {{ review.next_review_at.strftime('%Y-%m-%d') }}</span>
+                <span>{{ review.interval }}天间隔</span>
             </div>
-            <a href="/review/{{ review.note.id }}" class="btn btn-secondary btn-sm mt-1">Review</a>
+            <a href="/review/{{ review.note.id }}" class="btn btn-secondary btn-sm mt-1">复习</a>
         </div>
         {% endfor %}
         {% else %}
         <div class="empty-state">
             <div class="empty-icon">&#x2705;</div>
-            <p>All caught up</p>
+            <p>全部完成</p>
         </div>
         {% endif %}
     </div>

@@ -55,7 +55,7 @@ async def index(request: Request):
     db = request.state.db
 
     total = db.query(Note).count()
-    in_progress = db.query(Note).filter(Note.status == "in_progress").count()
+    in_progress = db.query(Note).filter(Note.status == "进行中").count()
 
     now = datetime.now(timezone.utc)
     due_reviews = (

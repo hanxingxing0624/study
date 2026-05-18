@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Knowledge Graph - Learning Notes{% endblock %}
+{% block title %}知识图谱 - 学习笔记{% endblock %}
 {% block content %}
-<h2>Knowledge Graph</h2>
+<h2>知识图谱</h2>
 <div id="graph" class="graph-container"></div>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
             svg.call(zoom);
 
             const color = d3.scaleOrdinal()
-                .domain(["planning", "in_progress", "completed"])
+                .domain(["计划中", "进行中", "已完成"])
                 .range(["#a1a1aa", "#2563eb", "#16a34a"]);
 
             const simulation = d3.forceSimulation(data.nodes)

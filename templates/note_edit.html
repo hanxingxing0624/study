@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}{% if note %}Edit{% else %}New{% endif %} Note{% endblock %}
+{% block title %}{% if note %}编辑笔记{% else %}新建笔记{% endif %}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>{% if note %}Edit Note{% else %}New Note{% endif %}</h2>
-    <a href="{% if note %}/notes/{{ note.id }}{% else %}/{% endif %}" class="btn btn-secondary btn-sm">Cancel</a>
+    <h2>{% if note %}编辑笔记{% else %}新建笔记{% endif %}</h2>
+    <a href="{% if note %}/notes/{{ note.id }}{% else %}/{% endif %}" class="btn btn-secondary btn-sm">取消</a>
 </div>
 
 {% if error %}<div class="flash flash-error">{{ error }}</div>{% endif %}
@@ -23,29 +23,29 @@
 
     <div class="form-row" style="margin-bottom:0.75rem;">
         <div class="form-group">
-            <label for="folder_id">Folder</label>
+            <label for="folder_id">文件夹</label>
             <select id="folder_id" name="folder_id">
-                <option value="">None</option>
+                <option value="">无</option>
                 {% for f in folders %}
                 <option value="{{ f.id }}" {% if note and note.folder_id == f.id %}selected{% endif %}>{{ f.name }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="form-group">
-            <label for="status">Status</label>
+            <label for="status">状态</label>
             <select id="status" name="status">
-                <option value="planning" {% if note and note.status == 'planning' %}selected{% endif %}>Planning</option>
-                <option value="in_progress" {% if note and note.status == 'in_progress' %}selected{% endif %}>In Progress</option>
-                <option value="completed" {% if note and note.status == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="计划中" {% if note and note.status == '计划中' %}selected{% endif %}>计划中</option>
+                <option value="进行中" {% if note and note.status == '进行中' %}selected{% endif %}>进行中</option>
+                <option value="已完成" {% if note and note.status == '已完成' %}selected{% endif %}>已完成</option>
             </select>
         </div>
     </div>
 
     <div class="form-group">
-        <label for="tags">Tags</label>
+        <label for="tags">标签</label>
         <input type="text" id="tags" name="tags"
             value="{% if note %}{% for nt in note.tags %}{{ nt.tag.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}"
-            placeholder="python, algorithms, beginner (comma separated)">
+            placeholder="python, 算法, 入门 (逗号分隔)">
     </div>
 
     <div class="editor-wrapper">
@@ -53,12 +53,12 @@
     </div>
 
     <div style="margin-top:1rem;display:flex;gap:0.5rem;">
-        <button type="submit" class="btn btn-lg">Save</button>
+        <button type="submit" class="btn btn-lg">保存</button>
         {% if note %}
         <button class="btn btn-danger"
             hx-delete="/notes/{{ note.id }}"
-            hx-confirm="Delete this note?"
-            hx-target="body">Delete</button>
+            hx-confirm="确定删除此笔记？"
+            hx-target="body">删除</button>
         {% endif %}
     </div>
 </form>
@@ -76,7 +76,7 @@
         previewStyle: "tab",
         height: "500px",
         initialValue: initialValue,
-        placeholder: "Write your note...",
+        placeholder: "开始写作...",
         toolbarItems: [
             ["heading", "bold", "italic", "strike"],
             ["hr", "quote"],

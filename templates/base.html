@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Learning Notes{% endblock %}</title>
+    <title>{% block title %}学习笔记{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
@@ -21,38 +21,38 @@
             <h1>
                 <a href="/">
                     <span class="logo-icon">N</span>
-                    Notes
+                    学习笔记
                 </a>
             </h1>
         </div>
         <div class="sidebar-search">
             <form action="/search" method="get">
-                <input type="search" name="q" placeholder="Search notes...">
+                <input type="search" name="q" placeholder="搜索笔记...">
             </form>
         </div>
         <div class="sidebar-nav">
             <div class="nav-group">
-                <div class="nav-label">Workspace</div>
+                <div class="nav-label">工作区</div>
                 <a href="/" class="nav-item">
-                    <span class="nav-dot"></span> Dashboard
+                    <span class="nav-dot"></span> 仪表盘
                 </a>
                 <a href="/notes/new" class="nav-item">
-                    <span class="nav-dot"></span> New Note
+                    <span class="nav-dot"></span> 新建笔记
                 </a>
             </div>
             <div class="nav-group">
-                <div class="nav-label">Browse</div>
+                <div class="nav-label">浏览</div>
                 <a href="/folders" class="nav-item">
-                    <span class="nav-dot"></span> Folders
+                    <span class="nav-dot"></span> 文件夹
                 </a>
                 <a href="/tags" class="nav-item">
-                    <span class="nav-dot"></span> Tags
+                    <span class="nav-dot"></span> 标签
                 </a>
                 <a href="/review" class="nav-item">
-                    <span class="nav-dot"></span> Review
+                    <span class="nav-dot"></span> 复习
                 </a>
                 <a href="/graph" class="nav-item">
-                    <span class="nav-dot"></span> Knowledge Graph
+                    <span class="nav-dot"></span> 知识图谱
                 </a>
             </div>
         </div>

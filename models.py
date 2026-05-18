@@ -27,7 +27,7 @@ class Note(Base):
     title = Column(String(500), nullable=False)
     content = Column(Text, default="")
     folder_id = Column(Integer, ForeignKey("folders.id"), nullable=True)
-    status = Column(String(20), default="planning")
+    status = Column(String(20), default="计划中")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime,
