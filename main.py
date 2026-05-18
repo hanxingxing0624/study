@@ -1,11 +1,14 @@
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.requests import Request
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import os
 
+from config import BASE_DIR, DATA_DIR
+
 app = FastAPI(title="Learning Notes")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 templates_dir = os.path.join(BASE_DIR, "templates")
 static_dir = os.path.join(BASE_DIR, "static")
 
@@ -23,9 +26,27 @@ def render_template(name: str, **kwargs) -> str:
 os.makedirs(os.path.join(BASE_DIR, "templates"), exist_ok=True)
 os.makedirs(os.path.join(BASE_DIR, "static", "css"), exist_ok=True)
 os.makedirs(os.path.join(BASE_DIR, "static", "js"), exist_ok=True)
+os.makedirs(DATA_DIR, exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+from models import SessionLocal
 
-def get_db(request):
+
+@app.middleware("http")
+async def db_session_middleware(request: Request, call_next):
+    db = SessionLocal()
+    request.state.db = db
+    try:
+        response = await call_next(request)
+    finally:
+        db.close()
+    return response
+
+
+def get_db(request: Request):
     return request.state.db
+
+
+from routes import folders
+app.include_router(folders.router)
