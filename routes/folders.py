@@ -36,7 +36,12 @@ async def create_folder(request: Request):
         tree = build_tree(all_folders)
         return render_template("folders.html", tree=tree, all_folders=all_folders, error="Name is required")
     if parent_id:
-        parent_id = int(parent_id)
+        try:
+            parent_id = int(parent_id)
+        except (ValueError, TypeError):
+            all_folders = db.query(Folder).order_by(Folder.name).all()
+            tree = build_tree(all_folders)
+            return render_template("folders.html", tree=tree, all_folders=all_folders, error="Invalid parent folder")
     folder = Folder(name=name, parent_id=parent_id)
     db.add(folder)
     db.commit()
