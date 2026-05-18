@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const color = d3.scaleOrdinal()
                 .domain(["planning", "in_progress", "completed"])
-                .range(["#f59e0b", "#3b82f6", "#10b981"]);
+                .range(["#a1a1aa", "#2563eb", "#16a34a"]);
 
             const simulation = d3.forceSimulation(data.nodes)
                 .force("link", d3.forceLink(data.edges).id(d => d.id).distance(120))
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .selectAll("line")
                 .data(data.edges)
                 .join("line")
-                .attr("stroke", "#ccc")
+                .attr("stroke", "#e4e4e7")
                 .attr("stroke-width", 1.5);
 
             const node = g.append("g")
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .attr("x", 12)
                 .attr("y", 4)
                 .attr("font-size", "11px")
-                .attr("fill", "var(--text)");
+                .attr("fill", "#3f3f46");
 
             node.append("title").text(d => d.title);
 

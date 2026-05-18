@@ -2,26 +2,30 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h2>Dashboard</h2>
+    <div>
+        <h2 style="margin-bottom:0.15rem;">Good morning</h2>
+        <p class="muted" style="margin-bottom:0;">{{ stats.due_reviews }} item(s) due for review</p>
+    </div>
+    <a href="/notes/new" class="btn">New Note</a>
 </div>
 
 <div class="stats-grid">
     <div class="stat-card">
-        <div class="stat-icon" style="background:var(--primary-light);color:var(--primary);">&#x1f4c4;</div>
+        <div class="stat-icon">&#x1f4c4;</div>
         <div>
             <div class="stat-value">{{ stats.total }}</div>
             <div class="stat-label">Total Notes</div>
         </div>
     </div>
-    <div class="stat-card">
-        <div class="stat-icon" style="background:var(--warning-light);color:var(--warning);">&#x1f4dd;</div>
+    <div class="stat-card featured">
+        <div class="stat-icon">&#x1f4dd;</div>
         <div>
             <div class="stat-value">{{ stats.in_progress }}</div>
             <div class="stat-label">In Progress</div>
         </div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon" style="background:var(--accent-light);color:var(--accent);">&#x1f504;</div>
+        <div class="stat-icon">&#x1f504;</div>
         <div>
             <div class="stat-value">{{ stats.due_reviews }}</div>
             <div class="stat-label">Due for Review</div>
@@ -39,9 +43,9 @@
                 <a href="/notes/{{ note.id }}">{{ note.title }}</a>
             </div>
             <div class="card-meta">
-                <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+                <span class="badge">{{ note.status }}</span>
                 {% if note.folder %}<span>&#x1f4c1; {{ note.folder.name }}</span>{% endif %}
-                <span>{{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                <span>{{ note.updated_at.strftime('%Y-%m-%d') }}</span>
             </div>
         </div>
         {% endfor %}
@@ -63,17 +67,15 @@
             </div>
             <div class="card-meta">
                 <span>Next: {{ review.next_review_at.strftime('%Y-%m-%d') }}</span>
-                <span>Interval: {{ review.interval }}d</span>
-                <span>Ease: {{ "%.1f" % review.ease_factor }}</span>
+                <span>{{ review.interval }}d interval</span>
             </div>
-            <a href="/review/{{ review.note.id }}" class="btn btn-sm mt-1">Review</a>
+            <a href="/review/{{ review.note.id }}" class="btn btn-secondary btn-sm mt-1">Review</a>
         </div>
         {% endfor %}
         {% else %}
         <div class="empty-state">
             <div class="empty-icon">&#x2705;</div>
             <p>All caught up</p>
-            <a href="/review" class="btn btn-secondary btn-sm">Review Panel</a>
         </div>
         {% endif %}
     </div>

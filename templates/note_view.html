@@ -13,7 +13,7 @@
 </div>
 
 <div class="card-meta mb-2">
-    <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+    <span class="badge">{{ note.status }}</span>
     {% if note.folder %}
     <span>&#x1f4c1; <a href="/folders/{{ note.folder.id }}">{{ note.folder.name }}</a></span>
     {% endif %}

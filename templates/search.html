@@ -9,7 +9,7 @@
     <div style="display:flex;gap:0.5rem;">
         <input type="search" name="q" value="{{ query }}" placeholder="Search notes..."
             style="flex:1;padding:0.55rem 0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.95rem;outline:none;transition:border-color 0.15s,box-shadow 0.15s;"
-            onfocus="this.style.borderColor='var(--primary)';this.style.boxShadow='0 0 0 2px rgba(26,115,232,0.15)'"
+            onfocus="this.style.borderColor='#2563eb';this.style.boxShadow='0 0 0 2px rgba(37,99,235,0.08)'"
             onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
         <button type="submit" class="btn">Search</button>
     </div>
@@ -24,7 +24,7 @@
         <a href="/notes/{{ note.id }}">{{ note.title }}</a>
     </div>
     <div class="card-meta">
-        <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+        <span class="badge">{{ note.status }}</span>
         {% if note.folder %}<span>&#x1f4c1; {{ note.folder.name }}</span>{% endif %}
         <span>{{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
     </div>

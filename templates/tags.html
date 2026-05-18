@@ -14,7 +14,7 @@
         <a href="/notes/{{ note.id }}">{{ note.title }}</a>
     </div>
     <div class="card-meta">
-        <span class="badge badge-{{ note.status.replace('_','-') }}">{{ note.status }}</span>
+        <span class="badge">{{ note.status }}</span>
         <span>Updated {{ note.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
     </div>
 </div>
