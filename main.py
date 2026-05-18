@@ -89,3 +89,5 @@ from routes import tags
 app.include_router(tags.router)
 from routes import search
 app.include_router(search.router)
+from routes import review
+app.include_router(review.router)

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Review - Learning Notes{% endblock %}
+{% block content %}
+<h2>Spaced Repetition Review</h2>
+
+{% if reviewing_note %}
+<div class="card" style="margin-bottom:2rem;">
+    <h3>{{ reviewing_note.title }}</h3>
+    <div class="markdown-body" style="max-height:60vh;overflow-y:auto;">
+        {{ reviewing_note.content }}
+    </div>
+    <div style="margin-top:1rem;">
+        <p class="meta">How well did you recall this?</p>
+        <form method="post" action="/review/{{ reviewing_note.id }}" style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+            <button name="quality" value="0" class="btn btn-danger">0 · Forgot</button>
+            <button name="quality" value="2" class="btn btn-secondary">2 · Hard</button>
+            <button name="quality" value="3" class="btn btn-secondary">3 · OK</button>
+            <button name="quality" value="4" class="btn">4 · Good</button>
+            <button name="quality" value="5" class="btn">5 · Easy</button>
+        </form>
+    </div>
+</div>
+<a href="/review" class="btn btn-secondary">← Back</a>
+
+{% else %}
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+    <div>
+        <h3>Due for Review ({{ due|length }})</h3>
+        {% if due %}
+        {% for review in due %}
+        <div class="card">
+            <h3><a href="/review/{{ review.note.id }}">{{ review.note.title }}</a></h3>
+            <div class="meta">
+                Due: {{ review.next_review_at.strftime('%Y-%m-%d %H:%M') }}
+                · Interval: {{ review.interval }}d
+                · Ease: {{ "%.1f" % review.ease_factor }}
+            </div>
+            <a href="/review/{{ review.note.id }}" class="btn btn-sm" style="margin-top:0.5rem;">Review Now</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="meta">All caught up!</p>
+        {% endif %}
+    </div>
+    <div>
+        <h3>Needs Initial Review</h3>
+        {% if unreviewed %}
+        {% for note in unreviewed %}
+        <div class="card">
+            <h3><a href="/review/{{ note.id }}">{{ note.title }}</a></h3>
+            <div class="meta">{{ note.updated_at.strftime('%Y-%m-%d') }}</div>
+            <a href="/review/{{ note.id }}" class="btn btn-sm" style="margin-top:0.5rem;">Start Review</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="meta">No notes awaiting initial review.</p>
+        {% endif %}
+
+        {% if upcoming %}
+        <h3 style="margin-top:1.5rem;">Upcoming</h3>
+        {% for review in upcoming %}
+        <div class="card">
+            <h3><a href="/notes/{{ review.note.id }}">{{ review.note.title }}</a></h3>
+            <div class="meta">Next: {{ review.next_review_at.strftime('%Y-%m-%d') }} · {{ review.interval }}d</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
